@@ -22,7 +22,7 @@ type CommonItem = {
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@700;800&family=Sarabun:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Sarabun:wght@400;500;600;700;800&display=swap');
 
         :root {
             --bg:      #f7f3ed;
@@ -31,8 +31,10 @@ type CommonItem = {
             --ink:  #3d342d;
             --ink2: #7a6d65;
             --ink3: #b8aea5;
-            --gov:    #1a7535;
-            --gov-bg: #e4f2e9;
+            --gov:    #1c6ee8;
+            --gov-bg: #e7f0ff;
+            --pay-green: #1a7535;
+            --pay-green-bg: #e4f2e9;
             --pay:    #8c4a45;
             --pay-bg: #f9f2f1;
             --accent: #9e8a78;
@@ -60,34 +62,65 @@ type CommonItem = {
         .logo-wrap { display: flex; align-items: center; gap: 0.5rem; }
         .logo-circle { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; background: var(--ink); border: 1.5px solid var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logo-img { width: 100%; height: 100%; object-fit: cover; }
-        .brand-name { font-weight: 800; font-size: 1rem; color: var(--ink); }
+        .brand-name { font-weight: 800; font-size: 1rem; color: var(--ink); display: flex; align-items: center; gap: 0.4rem; }
         
-        .quota-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-        .quota-hint { font-size: 0.6rem; font-weight: 700; color: var(--ink3); text-transform: uppercase; margin-right: 2px; }
+        .quota-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .quota-hint { font-size: 0.6rem; font-weight: 700; color: var(--ink); text-transform: uppercase; margin-right: 2px; }
+        .quota-pill-group { display: flex; align-items: center; gap: 4px; }
         .quota-pill { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--brd); border-radius: 99px; padding: .2rem .6rem; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
-        .quota-input { width: 50px; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 800; color: var(--gov); text-align: right; border: none; background: transparent; outline: none; }
+        .quota-input { width: 50px; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 800; color: var(--ink); text-align: right; border: none; background: transparent; outline: none; }
+        .btn-reset { background: var(--surface); border: 1px solid var(--brd); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink3); transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+        .btn-reset:hover { color: var(--gov); border-color: var(--gov); }
+        .btn-reset:active { transform: scale(0.9); }
 
         .tabs { flex-shrink: 0; display: flex; background: var(--surface2); border: 1px solid var(--brd); border-radius: 16px; padding: .2rem; gap: .2rem; }
         .tab { flex: 1; display: flex; align-items: center; justify-content: center; gap: .3rem; padding: .6rem .3rem; font-size: .88rem; font-weight: 700; color: var(--ink3); background: transparent; border: none; border-radius: 12px; cursor: pointer; }
         .tab.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 6px rgba(0,0,0,0.05); font-weight: 800; }
 
-        /* ── QUICK MODE ── */
-        #q-area { display: flex; flex-direction: column; flex: 1; min-height: 0; gap: .5rem; }
-        .result-card { flex-shrink: 0; background: var(--surface); border: 1px solid var(--ink); border-radius: var(--rm); padding: .7rem .9rem; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-        .total-section { display: flex; align-items: center; justify-content: space-between; padding-bottom: .6rem; margin-bottom: .6rem; border-bottom: 1.5px dashed var(--brd); }
-        .total-val { font-family: 'DM Sans'; font-size: 2.4rem; font-weight: 800; color: var(--ink); line-height: 1; }
-        
-        .sbox { padding: 0.6rem; border-radius: 14px; border: 1.5px solid transparent; }
-        .sbox-val { font-family: 'DM Sans'; font-size: 1.3rem; font-weight: 800; }
-        .sbox.pay { background: var(--gov-bg); border-color: var(--gov); color: var(--gov); } /* Green Pay per request */
-        .sbox.pay .sbox-val { font-size: 2rem; }
+        .recommend-rule { height: 1px; background: rgba(61,52,45,.12); margin: .15rem 0 .25rem; }
+        .recommend { flex-shrink: 0; display: flex; align-items: center; gap: .45rem; padding: .4rem .55rem; background: rgba(255,255,255,.65); border: 1px solid rgba(61,52,45,.08); border-radius: 14px; overflow-x: auto; scrollbar-width: none; }
+        .recommend::-webkit-scrollbar { display: none; }
+        .recommend-label { flex-shrink: 0; font-size: .72rem; font-weight: 800; color: var(--ink); text-transform: uppercase; letter-spacing: .06em; }
+        .rec-chip { flex-shrink: 0; display: inline-flex; align-items: center; gap: .35rem; padding: .38rem .58rem; border-radius: 999px; border: 1px solid rgba(28,110,232,.18); background: var(--surface); color: var(--ink); font-size: .78rem; font-weight: 800; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.03); white-space: nowrap; transition: all 0.2s; }
+        .rec-chip:hover { border-color: var(--gov); background: var(--gov-bg); }
+        .rec-chip small { font-family: 'DM Sans'; font-size: .75rem; font-weight: 800; color: var(--ink2); }
 
-        .npbtn { background: var(--surface); border: 1px solid var(--brd); border-radius: 16px; font-family: 'DM Sans'; font-size: 1.9rem; font-weight: 600; cursor: pointer; color: var(--ink); display: flex; align-items: center; justify-content: center; }
+        /* ── QUICK MODE ── */
+        #q-area { display: flex; flex-direction: column; flex: 1; min-height: 0; gap: .1rem; overflow: hidden; transition: transform 0.3s ease-out; }
+        .result-card { flex: 0 0 auto; min-height: 0; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(250,248,245,.96)); border: 1px solid rgba(61,52,45,.14); border-radius: var(--rm); padding: .55rem .6rem; box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+        .total-section { display: flex; align-items: baseline; justify-content: space-between; padding: .1rem 0 .5rem; margin-bottom: .45rem; border-bottom: 1px solid rgba(61,52,45,.08); }
+        .total-label { font-size: .88rem; font-weight: 800; color: var(--ink3); letter-spacing: .01em; }
+        .total-val { font-family: 'DM Sans'; font-size: 2.2rem; font-weight: 800; color: var(--ink); line-height: 1; letter-spacing: -0.04em; }
+
+        .summary-lines { display: flex; flex-direction: column; gap: .35rem; }
+        .summary-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .28rem .15rem; }
+        .summary-label { font-size: .83rem; font-weight: 800; color: var(--ink); }
+        .summary-value { font-family: 'DM Sans'; font-size: 1.05rem; font-weight: 800; color: var(--ink); white-space: nowrap; }
+        .summary-row.gov { padding: .25rem .15rem; }
+        .summary-row.gov .summary-label { color: var(--gov); }
+        .summary-row.gov .summary-value { color: var(--gov); }
+        .summary-row.extra { padding: .25rem .15rem; background: rgba(140, 74, 69, 0.04); border-radius: 8px; margin: 0 -0.2rem; }
+        .summary-row.extra .summary-label { color: var(--pay); padding-left: 0.4rem; }
+        .summary-row.extra .summary-value { color: var(--pay); padding-right: 0.4rem; }
+        .summary-row.pay { margin-top: .1rem; padding: .75rem .85rem; border: 2px solid rgba(26,117,53,.95); border-radius: 18px; background: linear-gradient(180deg, rgba(228,242,233,.95), rgba(236,246,239,.95)); box-shadow: 0 8px 18px rgba(26,117,53,0.08); }
+        .summary-row.pay .summary-label { color: var(--pay-green); font-size: .9rem; }
+        .summary-row.pay .summary-value { color: var(--pay-green); font-size: 2.15rem; font-weight: 800; letter-spacing: -0.04em; }
+
+        .numpad-shell { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: .06rem; margin-top: auto; }
+        .numpad { flex: 1; min-height: 0; gap: 0; }
+        .npbtn { background: var(--surface); border: 1px solid var(--brd); border-radius: 0; font-family: 'DM Sans'; font-size: 1rem; font-weight: 600; cursor: pointer; color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .22rem; min-height: 0; padding: .25rem 0; }
+        .npbtn:hover { background: var(--surface2); }
         .npbtn:active { background: var(--surface2); transform: translateY(1px); }
+        .np-main { font-family: 'DM Sans'; font-size: 1.95rem; font-weight: 800; color: var(--ink); line-height: 1; }
+        .np-sub { font-size: .62rem; font-weight: 700; color: rgba(61,52,45,.48); line-height: 1; }
+        .npbtn.action { color: var(--pay); }
+        .npbtn.action .np-main { font-size: 1.02rem; color: var(--pay); }
+        .npbtn.action .np-sub { display: none; }
+        .numpad-note { font-size: .62rem; font-weight: 700; color: rgba(61,52,45,.52); text-align: center; margin-top: .1rem; }
 
         /* ── RECEIPT MODE ── */
-        #r-area { display: none; flex-direction: column; flex: 1; min-height: 0; gap: .5rem; }
-        .add-form { background: var(--surface); border: 1px solid var(--ink); border-radius: var(--r); padding: .65rem; display: flex; flex-direction: column; gap: .4rem; }
+        #r-area { display: none; flex-direction: column; flex: 1; min-height: 0; gap: .5rem; overflow: hidden; transition: transform 0.3s ease-out; }
+        .add-form { background: var(--surface); border: 1px solid var(--ink); border-radius: var(--r); padding: .65rem; display: flex; flex-direction: column; gap: .4rem; flex-shrink: 0; }
         .add-field { background: var(--surface2); border: 1px solid var(--brd); border-radius: 11px; padding: .45rem .75rem; display: flex; align-items: center; }
         .add-field.price { flex: 0 0 100px; }
         .add-field input { border: none; background: transparent; font-weight: 800; outline: none; width: 100%; color: var(--ink); font-size: 1rem; }
@@ -117,10 +150,16 @@ type CommonItem = {
         .net-bar { display: flex; justify-content: space-between; align-items: center; margin-top: .5rem; padding-top: .5rem; border-top: 1.5px dashed var(--ink3); }
         .net-val { font-family: 'DM Sans'; font-size: 1.5rem; font-weight: 800; color: var(--ink); }
 
-        .btn-save { background: var(--surface); border: 2px solid var(--accent); border-radius: var(--r); padding: .8rem; font-size: 1.05rem; font-weight: 800; color: var(--accent); cursor: pointer; margin-top: .4rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .btn-save { background: var(--surface); border: 2px solid var(--accent); border-radius: var(--r); padding: .8rem; font-size: 1.05rem; font-weight: 800; color: var(--accent); cursor: pointer; margin-top: .4rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); flex-shrink: 0; }
+
+        /* INFO BUTTON */
+        .info-btn { background: none; border: none; cursor: pointer; color: var(--ink3); padding: .2rem .5rem; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; line-height: 1; transition: color 200ms; }
+        .info-btn:hover { color: var(--ink); }
+        .info-btn:active { transform: scale(0.92); }
 
         /* MODAL */
         #preview-modal { position: fixed; inset: 0; background: rgba(36,31,26,0.92); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1.5rem; backdrop-filter: blur(8px); }
+        #info-modal { position: fixed; inset: 0; background: rgba(36,31,26,0.92); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1.5rem; backdrop-filter: blur(8px); }
         .modal-body { background: white; border-radius: 28px; width: 100%; max-width: 400px; position: relative; display: flex; flex-direction: column; box-shadow: 0 30px 60px rgba(0,0,0,0.5); max-height: 85vh; }
         .modal-scroll { flex: 1; overflow-y: auto; padding: 1.2rem; display: flex; flex-direction: column; align-items: center; }
         .modal-close { position: absolute; top: -12px; right: -12px; background: white; border: 1.5px solid #ddd; border-radius: 50%; width: 40px; height: 40px; font-size: 22px; font-weight: 800; cursor: pointer; z-index: 20; color: var(--pay); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
@@ -128,6 +167,9 @@ type CommonItem = {
         .modal-foot { padding: 1rem; border-top: 1px solid #eee; }
         .btn-dl { width: 100%; background: var(--ink); color: white; border: none; border-radius: 14px; padding: 1rem; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
         .empty { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--ink3); text-align: center; width: 100%; }
+        .fit-check-line { flex-shrink: 0; height: 4px; border-radius: 0; background: var(--pay); margin-top: .25rem; }
+        .fit-check-line.top { display: none; }
+        .fit-check-line.bottom { margin-top: .06rem; }
     </style>
 </head>
 <body>
@@ -138,42 +180,121 @@ type CommonItem = {
             <div class="logo-circle">
                 <img src="/logo.webp" alt="L" id="ui-logo" class="logo-img" onerror="this.src='https://api.dicebear.com/7.x/shapes/svg?seed=gov&backgroundColor=3d342d'" />
             </div>
-            <span class="brand-name">ไทยช่วยไทยพลัส</span>
+            <span class="brand-name">ไทยช่วยไทยพลัส<button class="info-btn" onclick="openInfoModal()" title="ข้อมูลเพิ่มเติม"><i data-lucide="info"></i></button></span>
         </div>
         <div class="quota-wrap">
-            <span class="quota-hint">วงเงินที่รัฐบาลออกให้ (แก้ไขได้)</span>
-            <div class="quota-pill">
-                <input type="number" id="quota" class="quota-input" value="1000" inputmode="numeric" oninput="updateCore()" />
+            <span class="quota-hint">วงเงินที่รัฐบาลออกให้</span>
+            <div class="quota-pill-group">
+                <button class="btn-reset" onclick="resetQuota()" title="รีเซ็ตเป็น 1,000"><i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i></button>
+                <div class="quota-pill">
+                    <input type="number" id="quota" class="quota-input" value="1000" inputmode="numeric" oninput="saveAndRefresh()" />
+                </div>
             </div>
         </div>
     </header>
 
     <div class="tabs">
-        <button class="tab on" id="tab-q" onclick="switchMode('q')"><i data-lucide="zap"></i> คำนวณรวดเร็ว</button>
+        <button class="tab on" id="tab-q" onclick="switchMode('q')"><i data-lucide="zap"></i> คิดไว</button>
         <button class="tab" id="tab-r" onclick="switchMode('r')"><i data-lucide="receipt"></i> จดบันทึกบิล</button>
     </div>
 
-    <div id="q-area" style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
+    <div class="recommend-rule"></div>
+    <div class="recommend" id="quick-picks">
+        <span class="recommend-label">แนะนำ</span>
+        <!-- Drinks (10) -->
+        <button class="rec-chip" onclick="setQuickAmount('น้ำดื่ม', 10)">น้ำดื่ม <small>10</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำแร่', 15)">น้ำแร่ <small>15</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('กาแฟเย็น', 45)">กาแฟเย็น <small>45</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ชาเขียว', 30)">ชาเขียว <small>30</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำอัดลม', 20)">น้ำอัดลม <small>20</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('นมจืด', 12)">นมจืด <small>12</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('นมเปรี้ยว', 10)">นมเปรี้ยว <small>10</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำผลไม้', 25)">น้ำผลไม้ <small>25</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ชามมะนาว', 35)">ชามมะนาว <small>35</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำหวาน', 15)">น้ำหวาน <small>15</small></button>
+        <!-- Food (15) -->
+        <button class="rec-chip" onclick="setQuickAmount('กะเพราไข่ดาว', 60)">กะเพราไข่ดาว <small>60</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ข้าวผัดหมู', 50)">ข้าวผัดหมู <small>50</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ข้าวกล่อง', 35)">ข้าวกล่อง <small>35</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ไข่ไก่', 25)">ไข่ไก่ <small>25</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('บะหมี่กึ่งฯ', 7)">บะหมี่กึ่งฯ <small>7</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ข้าวเหนียวปิ้ง', 30)">ข้าวเหนียวปิ้ง <small>30</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ส้มตำไทย', 45)">ส้มตำไทย <small>45</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ก๋วยเตี๋ยว', 40)">ก๋วยเตี๋ยว <small>40</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ลูกชิ้นปิ้ง', 10)">ลูกชิ้นปิ้ง <small>10</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ขนมปัง', 20)">ขนมปัง <small>20</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ปลากระป๋อง', 18)">ปลากระป๋อง <small>18</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('โจ๊กซอง', 15)">โจ๊กซอง <small>15</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('แซนวิช', 27)">แซนวิช <small>27</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ข้าวสวย', 10)">ข้าวสวย <small>10</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ไก่ทอด', 40)">ไก่ทอด <small>40</small></button>
+        <!-- Others (25) -->
+        <button class="rec-chip" onclick="setQuickAmount('สบู่', 45)">สบู่ <small>45</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ยาสีฟัน', 55)">ยาสีฟัน <small>55</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('แชมพู', 29)">แชมพู <small>29</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ผงซักฟอก', 75)">ผงซักฟอก <small>75</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำมันพืช', 50)">น้ำมันพืช <small>50</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('พัดลมพกพา', 120)">พัดลมพกพา <small>120</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('กาต้มน้ำ', 199)">กาต้มน้ำ <small>199</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ทิชชู่', 45)">ทิชชู่ <small>45</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำยาซักผ้า', 89)">น้ำยาซักผ้า <small>89</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('สบู่เหลว', 125)">สบู่เหลว <small>125</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ไม้ตบยุง', 85)">ไม้ตบยุง <small>85</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ของใช้', 89)">ของใช้ <small>89</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('หน้ากากอนามัย', 45)">หน้ากาก <small>45</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('เจลล้างมือ', 59)">เจลล้างมือ <small>59</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('แปรงสีฟัน', 25)">แปรงสีฟัน <small>25</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำยาล้างจาน', 15)">น้ำยาล้างจาน <small>15</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ผงปรุงรส', 12)">ผงปรุงรส <small>12</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำปลา', 30)">น้ำปลา <small>30</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ซีอิ๊วขาว', 25)">ซีอิ๊วขาว <small>25</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('น้ำตาลทราย', 25)">น้ำตาลทราย <small>25</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ยาพารา', 15)">ยาพารา <small>15</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('พลาสเตอร์', 10)">พลาสเตอร์ <small>10</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ถ่านไฟฉาย', 40)">ถ่านไฟฉาย <small>40</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('หลอดไฟ LED', 60)">หลอดไฟ LED <small>60</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ถุงขยะ', 25)">ถุงขยะ <small>25</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ผ้าอนามัย', 35)">ผ้าอนามัย <small>35</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('โฟมล้างหน้า', 99)">โฟมล้างหน้า <small>99</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('ครีมอาบน้ำ', 85)">ครีมอาบน้ำ <small>85</small></button>
+        <button class="rec-chip" onclick="setQuickAmount('แป้งเย็น', 35)">แป้งเย็น <small>35</small></button>
+    </div>
+
+    <div id="q-area" style="display:flex; flex-direction:column; gap:0.4rem; flex:1; min-height:0; overflow:hidden;">
         <div class="result-card">
             <div class="total-section">
-                <span style="font-size:0.95rem; font-weight:800; color:var(--ink3)">ยอดชำระรวม</span>
+                <span class="total-label">ยอดชำระรวม</span>
                 <div class="total-val"><span id="d-total">0</span></div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
-                <div style="background:var(--bg); padding:0.7rem; border-radius:16px; border:1.5px solid var(--brd); color:var(--ink2)"><div style="font-size:0.75rem; font-weight:800; opacity:0.8;">รัฐบาลสนับสนุน</div><div class="sbox-val" id="d-gov">0.00</div></div>
-                <div class="sbox pay"><div style="font-size:0.75rem; font-weight:800; opacity:0.8;">ยอดที่ต้องชำระจริง</div><div class="sbox-val" id="d-pay">0.00</div></div>
+            <div class="summary-lines">
+                <div class="summary-row gov">
+                    <span class="summary-label">รัฐสนับสนุน (60%)</span>
+                    <span class="summary-value" id="d-gov">0.00</span>
+                </div>
+                <div class="summary-row extra" id="d-extra-row" style="display:none;">
+                    <span class="summary-label" id="d-extra-note">จ่ายเพิ่ม (ส่วนเกินสิทธิ)</span>
+                    <span class="summary-value" id="d-extra">0.00</span>
+                </div>
+                <div class="summary-row pay">
+                    <span class="summary-label">เราจ่ายจริง</span>
+                    <span class="summary-value" id="d-pay">0.00</span>
+                </div>
             </div>
             <div id="d-warn" style="text-align:right; font-size:0.8rem; font-weight:800; color:var(--pay); margin-top:0.4rem; min-height:1.2rem;"></div>
         </div>
-        <div class="numpad" style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.35rem; flex:1;">
-            <button class="npbtn" onclick="tn('7')">7</button><button class="npbtn" onclick="tn('8')">8</button><button class="npbtn" onclick="tn('9')">9</button>
-            <button class="npbtn" onclick="tn('4')">4</button><button class="npbtn" onclick="tn('5')">5</button><button class="npbtn" onclick="tn('6')">6</button>
-            <button class="npbtn" onclick="tn('1')">1</button><button class="npbtn" onclick="tn('2')">2</button><button class="npbtn" onclick="tn('3')">3</button>
-            <button class="npbtn" style="font-size:1.15rem; color:var(--pay); font-weight:800;" onclick="clearQ()">ล้าง</button><button class="npbtn" onclick="tn('0')">0</button><button class="npbtn" onclick="delQ()"><i data-lucide="delete" style="color:var(--ink2)"></i></button>
+        <div class="numpad-shell">
+            <div class="numpad" style="display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(4,1fr); gap:0;">
+                <button class="npbtn np-digit" data-digit="7" data-read="เจ็ด" type="button"><span class="np-main">7</span><span class="np-sub">เจ็ด</span></button><button class="npbtn np-digit" data-digit="8" data-read="แปด" type="button"><span class="np-main">8</span><span class="np-sub">แปด</span></button><button class="npbtn np-digit" data-digit="9" data-read="เก้า" type="button"><span class="np-main">9</span><span class="np-sub">เก้า</span></button>
+                <button class="npbtn np-digit" data-digit="4" data-read="สี่" type="button"><span class="np-main">4</span><span class="np-sub">สี่</span></button><button class="npbtn np-digit" data-digit="5" data-read="ห้า" type="button"><span class="np-main">5</span><span class="np-sub">ห้า</span></button><button class="npbtn np-digit" data-digit="6" data-read="หก" type="button"><span class="np-main">6</span><span class="np-sub">หก</span></button>
+                <button class="npbtn np-digit" data-digit="1" data-read="หนึ่ง" type="button"><span class="np-main">1</span><span class="np-sub">หนึ่ง</span></button><button class="npbtn np-digit" data-digit="2" data-read="สอง" type="button"><span class="np-main">2</span><span class="np-sub">สอง</span></button><button class="npbtn np-digit" data-digit="3" data-read="สาม" type="button"><span class="np-main">3</span><span class="np-sub">สาม</span></button>
+                <button class="npbtn action" type="button" onclick="clearQ()"><span class="np-main">ล้าง</span><span class="np-sub">กดค้างสั่น</span></button><button class="npbtn np-digit" data-digit="0" data-read="ศูนย์" type="button"><span class="np-main">0</span><span class="np-sub">ศูนย์</span></button><button class="npbtn action" type="button" onclick="delQ()"><span class="np-main"><i data-lucide="delete" style="color:var(--ink2)"></i></span><span class="np-sub">ลบ</span></button>
+            </div>
+            <div class="fit-check-line bottom"></div>
+            <div class="numpad-note">กดค้างที่ตัวเลขเพื่อสั่นเป็นจังหวะมอร์ส</div>
         </div>
     </div>
 
-    <div id="r-area" style="display:none; flex-direction:column; gap:0.4rem; flex:1;">
+    <div id="r-area" style="display:none; flex-direction:column; gap:0.4rem; flex:1; min-height:0; overflow:hidden;">
         <div class="add-form">
             <div style="display:flex; gap:0.4rem;"><div class="add-field" style="flex:1;"><input type="text" id="n-name" placeholder="ชื่อสินค้า" onkeypress="onEnter(event)" /></div><div class="add-field price"><input type="number" id="n-price" placeholder="ราคา" inputmode="numeric" onkeypress="onEnter(event)" /></div></div>
             <button class="btn-add" onclick="addFromInput()">เพิ่มรายการลงในบิล</button>
@@ -200,10 +321,75 @@ type CommonItem = {
     </div>
 </div>
 
+<div id="info-modal">
+    <div class="modal-body">
+        <button class="modal-close" onclick="closeInfoModal()">×</button>
+        <div class="modal-scroll">
+            <div style="text-align:left; width:100%; max-width:320px;">
+                <h2 style="font-size:1.4rem; margin-bottom:0.8rem; color:var(--ink); font-weight:800;">ไทยช่วยไทยพลัส (60/40)</h2>
+                <div style="background: var(--gov-bg); color: var(--gov); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1.2rem; display: inline-block;">
+                    1 มิ.ย. - 30 ก.ย. 2569
+                </div>
+                
+                <h3 style="font-size:1.1rem; margin-bottom:0.6rem; color:var(--ink); font-weight:800;">เงื่อนไขโครงการ</h3>
+                <ul style="font-size:0.9rem; line-height:1.7; color:var(--ink2); margin-bottom:1.2rem; padding-left: 1.2rem;">
+                    <li><strong>รัฐช่วยจ่าย 60%</strong> ของยอดซื้อสินค้า/บริการ</li>
+                    <li><strong>เราจ่ายเอง 40%</strong> ผ่านแอปฯ เป๋าตัง</li>
+                    <li>จำกัดสิทธิรัฐช่วยจ่ายสูงสุด <strong>200 บาท/วัน</strong></li>
+                    <li>วงเงินรวมรัฐช่วยจ่ายสูงสุด <strong>1,000 บาท/เดือน</strong></li>
+                    <li>(รวมสูงสุด 4,000 บาท ตลอดทั้งโครงการ)</li>
+                </ul>
+
+                <h3 style="font-size:1.1rem; margin-bottom:0.6rem; color:var(--ink); font-weight:800;">การคำนวณเงิน</h3>
+                <p style="font-size:0.9rem; line-height:1.6; color:var(--ink2); margin-bottom:1rem;">
+                    ระบบจะคำนวณโดยยึดตาม <strong>"วงเงินรัฐคงเหลือ"</strong> ที่คุณระบุ (ช่องขวาบน) หากยอดซื้อ 60% เกิน 200 บาท หรือเกินวงเงินคงเหลือ ส่วนต่างนั้นคุณต้องเป็นคนชำระเองทั้งหมด (Top-up)
+                </p>
+                
+                <h3 style="font-size:1.1rem; margin-bottom:0.6rem; color:var(--ink); font-weight:800;">วิธีใช้งาน</h3>
+                
+                <div style="margin-bottom:0.8rem;">
+                    <p style="font-size:0.95rem; font-weight:700; color:var(--ink); margin-bottom:0.4rem;">• โหมดคิดไว (Zap)</p>
+                    <p style="font-size:0.9rem; line-height:1.6; color:var(--ink2); margin-left:1rem;">กรอกราคาสินค้าเพื่อดูยอดที่ต้องจ่ายทันที เหมาะสำหรับหน้าเคาน์เตอร์</p>
+                </div>
+                
+                <div style="margin-bottom:0.8rem;">
+                    <p style="font-size:0.95rem; font-weight:700; color:var(--ink); margin-bottom:0.4rem;">• โหมดจดบันทึกบิล (Receipt)</p>
+                    <p style="font-size:0.9rem; line-height:1.6; color:var(--ink2); margin-left:1rem;">พิมพ์ชื่อและราคาสินค้าทีละรายการ ระบบจะรวมยอดและสรุปยอดสิทธิให้พร้อมบันทึกเป็นรูปภาพ</p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     let mode = 'q', qStr = '', items = [];
     const fmt = (v) => v.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     
+    // Persistence
+    const loadData = () => {
+        const savedQuota = localStorage.getItem('tht_quota');
+        if (savedQuota !== null) document.getElementById('quota').value = savedQuota;
+        
+        const savedItems = localStorage.getItem('tht_items');
+        if (savedItems !== null) items = JSON.parse(savedItems);
+    };
+
+    const saveData = () => {
+        localStorage.setItem('tht_quota', document.getElementById('quota').value);
+        localStorage.setItem('tht_items', JSON.stringify(items));
+    };
+
+    window.saveAndRefresh = () => {
+        saveData();
+        updateCore();
+    };
+
+    window.resetQuota = () => {
+        document.getElementById('quota').value = 1000;
+        saveAndRefresh();
+    };
+
     window.switchMode = (m) => {
         mode = m;
         document.getElementById('tab-q').classList.toggle('on', m === 'q');
@@ -213,9 +399,76 @@ type CommonItem = {
         updateCore();
     };
 
+    window.setQuickAmount = (name, price) => {
+        // Add to items for receipt mode
+        items.push({ name: name, price: price });
+        saveData();
+        renderList();
+        
+        // Also update quick mode for convenience
+        qStr = String(price);
+        updateCore();
+        
+        // Optional: Switch to receipt mode automatically if user wants to see the bill
+        // window.switchMode('r'); 
+    };
+
     window.tn = (n) => { if (qStr.length < 8) qStr += n; updateCore(); };
     window.clearQ = () => { qStr = ''; updateCore(); };
     window.delQ = () => { qStr = qStr.slice(0, -1); updateCore(); };
+
+    const morseMap = {
+        '0': '-----',
+        '1': '.----',
+        '2': '..---',
+        '3': '...--',
+        '4': '....-',
+        '5': '.....',
+        '6': '-....',
+        '7': '--...',
+        '8': '---..',
+        '9': '----.'
+    };
+
+    function vibrateMorseDigit(digit) {
+        const sequence = morseMap[digit];
+        if (!sequence || !navigator.vibrate) return;
+        const pattern = [];
+        sequence.split('').forEach((symbol, index) => {
+            pattern.push(symbol === '.' ? 60 : 180);
+            if (index < sequence.length - 1) pattern.push(60);
+        });
+        navigator.vibrate(pattern);
+    }
+
+    function bindNumpadButtons() {
+        document.querySelectorAll('.np-digit').forEach((button) => {
+            const digit = button.dataset.digit;
+            let longPressTimer = null;
+            let longPressTriggered = false;
+
+            button.addEventListener('pointerdown', () => {
+                longPressTriggered = false;
+                longPressTimer = window.setTimeout(() => {
+                    longPressTriggered = true;
+                    vibrateMorseDigit(digit);
+                }, 450);
+            });
+
+            const clearPress = () => {
+                if (longPressTimer) window.clearTimeout(longPressTimer);
+                longPressTimer = null;
+            };
+
+            button.addEventListener('pointerup', clearPress);
+            button.addEventListener('pointerleave', clearPress);
+            button.addEventListener('pointercancel', clearPress);
+            button.addEventListener('click', () => {
+                if (longPressTriggered) return;
+                window.tn(digit);
+            });
+        });
+    }
 
     window.addFromInput = () => {
         const ne = document.getElementById('n-name'), pe = document.getElementById('n-price');
@@ -223,11 +476,12 @@ type CommonItem = {
         if (p > 0) {
             items.push({ name: ne.value.trim() || `รายการ #${items.length + 1}`, price: p });
             ne.value = ''; pe.value = '';
+            saveData();
             renderList();
         }
     };
-    window.removeItem = (i) => { items.splice(i, 1); renderList(); };
-    window.updateName = (i, v) => { items[i].name = v; };
+    window.removeItem = (i) => { items.splice(i, 1); saveData(); renderList(); };
+    window.updateName = (i, v) => { items[i].name = v; saveData(); };
     window.onEnter = (e) => { if (e.key === 'Enter') addFromInput(); };
 
     function renderList() {
@@ -256,20 +510,47 @@ type CommonItem = {
     window.updateCore = () => {
         const quota = parseFloat(document.getElementById('quota').value) || 0;
         const total = mode === 'q' ? (parseFloat(qStr) || 0) : items.reduce((s, i) => s + i.price, 0);
-        let gov = Math.min(total * 0.6, 200, quota);
+        
+        // potential support is 60% of total
+        const supportPotential = total * 0.6;
+        
+        // actual support is limited by: 1) 60% of total, 2) daily limit of 200, 3) remaining quota
+        let gov = Math.min(supportPotential, 200, quota);
+        
+        // what we must pay is total minus what gov actually pays
         let net = total - gov;
-        let extra = Math.max(0, (total * 0.6) - gov);
+        
+        // 'extra' is the top-up part: when our 60% right is more than what gov can actually pay
+        let extra = Math.max(0, supportPotential - gov);
 
         document.getElementById('d-total').innerText = total.toLocaleString();
         document.getElementById('d-gov').innerText = fmt(gov);
+        document.getElementById('d-extra-note').innerText = `ส่วนเกินสิทธิที่ต้องจ่ายเพิ่ม`;
+        document.getElementById('d-extra').innerText = fmt(extra);
         document.getElementById('d-pay').innerText = fmt(net);
-        document.getElementById('d-warn').innerText = gov >= 200 ? '⚠️ จำกัดสิทธิ 200.-/วัน' : (total*0.6 > quota ? '⚠️ สิทธิไม่พอ' : '');
+        
+        let warnMsg = '';
+        if (supportPotential > 200) warnMsg = '⚠️ จำกัดสิทธิ 200.-/วัน';
+        else if (supportPotential > quota) warnMsg = '⚠️ สิทธิคงเหลือไม่พอ';
+        document.getElementById('d-warn').innerText = warnMsg;
+
+        const extraRow = document.getElementById('d-extra-row');
+        if (extra > 0.005) {
+            extraRow.style.display = 'flex';
+        } else {
+            extraRow.style.display = 'none';
+        }
 
         document.getElementById('rs-total').innerText = fmt(total);
         document.getElementById('rs-gov').innerText = '−' + fmt(gov);
         document.getElementById('rs-net').innerText = fmt(net);
         const er = document.getElementById('rs-extra-row');
-        if (extra > 0.01) { er.style.display = 'flex'; document.getElementById('rs-extra').innerText = '+' + fmt(extra); } else er.style.display = 'none';
+        if (extra > 0.005) { 
+            er.style.display = 'flex'; 
+            document.getElementById('rs-extra').innerText = '+' + fmt(extra); 
+        } else {
+            er.style.display = 'none';
+        }
     };
 
     window.saveReceipt = function() {
@@ -283,52 +564,124 @@ type CommonItem = {
 
         const grouped = [];
         items.forEach(item => { const ex = grouped.find(g => g.name === item.name && g.price === item.price); if (ex) { ex.qty++; ex.sum += item.price; } else { grouped.push({ name: item.name, price: item.price, qty: 1, sum: item.price }); } });
-        const rows = grouped.map(it => `<tr><td style="padding:12px 0; font-size:14px; font-weight:700; border-bottom:1px dashed #ddd;">${it.name} ${it.qty > 1 ? `(x${it.qty})` : ''}</td><td style="padding:12px 0; text-align:right; font-family:DM Sans; font-weight:800; border-bottom:1px dashed #ddd; white-space:nowrap; padding-left:20px;">${fmt(it.sum)}</td></tr>`).join('');
         
-        const html = `
-        <div style="width: 350px; background: #fffdf9; font-family: Sarabun, sans-serif; color: #3d342d; overflow:hidden;">
-            <div style="background: #18140f; padding: 25px 20px; text-align:center; color:white;">
-                <div style="width:60px; height:60px; border-radius:50%; overflow:hidden; background:white; margin: 0 auto 12px; border: 2px solid white; display:flex; align-items:center; justify-content:center;">
-                    <img src="${logoSrc}" style="width:100%; height:100%; object-fit:cover;" />
-                </div>
-                <h1 style="margin:0; font-size: 24px; font-weight:800;">ไทยช่วยไทยพลัส</h1>
-                <p style="font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 4px; text-transform:uppercase; letter-spacing:2px;">Transaction</p>
-            </div>
+        let remainingQuota = quota;
+        let remainingDailyLimit = 200;
+
+        const itemRows = grouped.map((it) => {
+            const itemPrice = it.sum;
+            const govPotential = itemPrice * 0.6;
+            const govActual = Math.min(govPotential, remainingQuota, remainingDailyLimit);
+            const userActual = itemPrice - govActual;
+            remainingQuota -= govActual;
+            remainingDailyLimit -= govActual;
             
-            <div style="padding: 25px;">
-                <table style="width:100%; border-collapse:collapse; margin-bottom:20px;">
-                    <thead><tr>
-                        <th style="text-align:left; font-size:10px; color:#b8aea5; text-transform:uppercase; padding-bottom:8px; border-bottom:2px solid #3d342d;">รายการ</th>
-                        <th style="text-align:right; font-size:10px; color:#b8aea5; text-transform:uppercase; padding-bottom:8px; border-bottom:2px solid #3d342d;">รวม</th>
-                    </tr></thead>
-                    <tbody>${rows || '<tr><td colspan="2" style="text-align:center; padding:20px; color:#b8aea5;">ไม่มีรายการ</td></tr>'}</tbody>
+            return `
+                <tr style="border-bottom: 1px solid #f0eee9;">
+                    <td style="padding: 16px 5px; font-size: 15px; font-weight: 700; color: #1a1512; line-height: 1.2; width: 35%; vertical-align: middle;">
+                        ${it.name} ${it.qty > 1 ? `<span style="font-size: 11px; color: #b8aea5;">x${it.qty}</span>` : ''}
+                    </td>
+                    <td style="padding: 16px 5px; text-align: center; font-family: 'DM Sans', sans-serif; font-weight: 700; color: #1a1512; width: 20%; letter-spacing: 2px; vertical-align: middle; line-height: 1.2;">${Math.round(it.sum)}</td>
+                    <td style="padding: 16px 5px; text-align: center; font-family: 'DM Sans', sans-serif; font-weight: 700; color: #8c4a45; width: 20%; letter-spacing: 2px; vertical-align: middle; line-height: 1.2;">${Math.round(govActual)}</td>
+                    <td style="padding: 16px 5px; text-align: center; font-family: 'DM Sans', sans-serif; font-weight: 700; color: #1a7535; width: 20%; letter-spacing: 2px; vertical-align: middle; line-height: 1.2;">${Math.round(userActual)}</td>
+                    <td style="padding: 16px 0 16px 5px; text-align: right; font-weight: 800; color: #1a1512; width: 5%; font-size: 15px; vertical-align: middle; line-height: 1.2;">฿</td>
+                </tr>
+            `;
+        }).join('');
+
+        const html = `
+        <div style="width: 380px; background: #fdfaf5; border: 1px solid #ddd; overflow: hidden; font-family: 'Sarabun', sans-serif; color: #1a1512; box-shadow: 0 10px 30px rgba(0,0,0,0.05); letter-spacing: 0.8px;">
+            <!-- Header -->
+            <div style="background: #1a1512; color: white; padding: 45px 20px; text-align: center;">
+                <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 2.5px;">ไทยช่วยไทยพลัส</h1>
+                <p style="margin: 10px 0 0; font-size: 14px; font-weight: 500; opacity: 0.7; letter-spacing: 1.5px;">บันทึกการใช้สิทธิ</p>
+            </div>
+
+            <div style="padding: 30px 20px 10px;">
+                <!-- Table Section -->
+                <table style="width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 25px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 35%; text-align: left; font-size: 12px; font-weight: 800; color: #b8aea5; padding: 0 5px 15px; text-transform: uppercase;">รายการ</th>
+                            <th style="width: 20%; text-align: center; font-size: 12px; font-weight: 800; color: #b8aea5; padding: 0 5px 15px; text-transform: uppercase;">ราคา</th>
+                            <th style="width: 20%; text-align: center; font-size: 12px; font-weight: 800; color: #8c4a45; padding: 0 5px 15px; text-transform: uppercase;">รัฐออก</th>
+                            <th style="width: 20%; text-align: center; font-size: 12px; font-weight: 800; color: #1a7535; padding: 0 5px 15px; text-transform: uppercase;">เราจ่าย</th>
+                            <th style="width: 5%; padding-bottom: 15px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" style="border-top: 2px dashed #d9d2c5; padding: 0; height: 12px;"></td></tr>
+                        ${itemRows}
+                        <tr><td colspan="5" style="border-top: 2px dashed #d9d2c5; padding: 12px 0 0;"></td></tr>
+                        <tr style="font-size: 18px; font-weight: 800;">
+                            <td style="padding: 15px 5px;">รวม</td>
+                            <td style="padding: 15px 5px; text-align: center; font-family: 'DM Sans', sans-serif; letter-spacing: 2px;">${Math.round(total)}</td>
+                            <td style="padding: 15px 5px; text-align: center; font-family: 'DM Sans', sans-serif; color: #8c4a45; letter-spacing: 2px;">${Math.round(gov)}</td>
+                            <td style="padding: 15px 5px; text-align: center; font-family: 'DM Sans', sans-serif; color: #1a7535; letter-spacing: 2px;">${Math.round(net)}</td>
+                            <td style="padding: 15px 0; text-align: right; font-size: 18px;">฿</td>
+                        </tr>
+                    </tbody>
                 </table>
 
-                <div style="background: #f7f3ed; padding: 18px; border-radius: 20px;">
-                    <div style="display:flex; justify-content:space-between; font-size: 14px; margin-bottom: 6px;"><span>รวมราคาสินค้า</span><b>${fmt(total)}</b></div>
-                    <div style="display:flex; justify-content:space-between; font-size: 14px; color: #1a7535; margin-bottom: 6px;"><span>รัฐบาลสนับสนุน (60%)</span><b>−${fmt(gov)}</b></div>
-                    ${extra > 0 ? `<div style="display:flex; justify-content:space-between; font-size: 14px; color: #8c4a45; margin-bottom: 6px;"><span>ส่วนเกินวงเงินสิทธิ</span><b>+${fmt(extra)}</b></div>` : ''}
-                    <div style="display:flex; justify-content:space-between; font-size: 20px; border-top: 2px solid #3d342d; padding-top: 12px; margin-top: 8px;">
-                        <span style="font-weight:800;">ยอดที่ต้องชำระจริง</span>
-                        <b style="font-family:DM Sans; color:#3d342d; margin-left:10px; white-space:nowrap;">${fmt(net)}</b>
+                <div style="border-top: 2px dashed #d9d2c5; margin-bottom: 30px; opacity: 0.5;"></div>
+
+                <!-- Final Calculations -->
+                <div style="padding: 20px; background: #ffffff; border: 1.5px solid #ece8e1; margin-bottom: 35px;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="font-size: 15px; font-weight: 700; color: #7a6d65;">
+                            <td style="padding: 8px 0;">รวมราคาสินค้าทั้งหมด</td>
+                            <td style="padding: 8px 0; text-align: right; font-family: 'DM Sans', sans-serif; color: #1a1512; letter-spacing: 1.5px;">${fmt(total)}</td>
+                            <td style="padding: 8px 0 8px 10px; text-align: right; font-weight: 800; color: #1a1512; width: 25px;">฿</td>
+                        </tr>
+                        <tr style="font-size: 15px; font-weight: 700; color: #8c4a45;">
+                            <td style="padding: 8px 0;">สิทธิรัฐช่วยจ่าย (60%)</td>
+                            <td style="padding: 8px 0; text-align: right; font-family: 'DM Sans', sans-serif; letter-spacing: 1.5px;">−${fmt(gov)}</td>
+                            <td style="padding: 8px 0 8px 10px; text-align: right; font-weight: 800; width: 25px;">฿</td>
+                        </tr>
+                        ${extra > 0.01 ? `
+                        <tr style="font-size: 15px; font-weight: 700; color: #1a1512;">
+                            <td style="padding: 8px 0;">ส่วนเกินวงเงินสิทธิ/เพดาน</td>
+                            <td style="padding: 8px 0; text-align: right; font-family: 'DM Sans', sans-serif; letter-spacing: 1.5px;">+${fmt(extra)}</td>
+                            <td style="padding: 8px 0 8px 10px; text-align: right; font-weight: 800; width: 25px;">฿</td>
+                        </tr>
+                        ` : ''}
+                        <tr><td colspan="3" style="border-top: 1px solid #f0eee9; padding: 10px 0;"></td></tr>
+                        <tr style="font-size: 15px; font-weight: 700; color: #1c6ee8;">
+                            <td style="padding: 8px 0;">สิทธิที่มีก่อนใช้</td>
+                            <td style="padding: 8px 0; text-align: right; font-family: 'DM Sans', sans-serif; letter-spacing: 1.5px;">${fmt(quota)}</td>
+                            <td style="padding: 8px 0 8px 10px; text-align: right; font-weight: 800; width: 25px;">฿</td>
+                        </tr>
+                        <tr style="font-size: 15px; font-weight: 700; color: #b8aea5;">
+                            <td style="padding: 8px 0;">สิทธิคงเหลือหลังหัก</td>
+                            <td style="padding: 8px 0; text-align: right; font-family: 'DM Sans', sans-serif; letter-spacing: 1.5px;">${fmt(quota - gov)}</td>
+                            <td style="padding: 8px 0 8px 10px; text-align: right; font-weight: 800; width: 25px;">฿</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Final Net -->
+                <div style="margin-top: 10px; padding: 30px 10px; border-top: 4px solid #1a1512; display: flex; justify-content: space-between; align-items: baseline;">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <span style="font-size: 20px; font-weight: 800; color: #1a1512; letter-spacing: 1.5px;">ยอดที่ต้องชำระจริง</span>
+                        <span style="font-size: 12px; color: #7a6d65; font-weight: 600; letter-spacing: 1px;">รวมส่วนเกินสิทธิแล้ว (ถ้ามี)</span>
+                    </div>
+                    <div style="display: flex; align-items: baseline; gap: 10px;">
+                        <span style="font-family: 'DM Sans', sans-serif; font-size: 38px; font-weight: 800; color: #1a7535; letter-spacing: -0.5px;">${fmt(net)}</span>
+                        <span style="font-size: 24px; font-weight: 800; color: #1a7535;">฿</span>
                     </div>
                 </div>
+            </div>
 
-                <div style="margin-top: 18px; padding: 12px; border: 1.5px solid #d9d2c5; border-radius: 12px; background: #fff;">
-                    <div style="display:flex; justify-content:space-between; font-size: 12px; color:#7a6d65;"><span>วงเงินจากรัฐบาลก่อนทำรายการ:</span><b>${fmt(quota)}</b></div>
-                    <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 800; color: #6b5e4c; margin-top:4px;"><span>วงเงินจากรัฐบาลคงเหลือ:</span><b>${fmt(quota - gov)}</b></div>
-                </div>
-
-                <div style="text-align:center; margin-top: 30px; font-size: 10px; color: #b8aea5; font-weight:600;">
-                    ${dateStr}
-                </div>
+            <!-- Footer -->
+            <div style="background: #f4f1eb; padding: 25px; text-align: center;">
+                <span style="font-size: 13px; color: #b8aea5; font-weight: 700; letter-spacing: 2px;">${dateStr}</span>
             </div>
         </div>`;
 
-        const frame = document.createElement('iframe'); frame.style.cssText = 'position:fixed; left:-9999px; width:350px; height:1100px;'; document.body.appendChild(frame); frame.contentDocument.write(`<html><head><meta charset="utf-8"/></head><body style="margin:0; background:#f7f3ed;">${html}</body></html>`); frame.contentDocument.close();
+        const frame = document.createElement('iframe'); frame.style.cssText = 'position:fixed; left:-9999px; width:380px; height:1200px;'; document.body.appendChild(frame); frame.contentDocument.write(`<html><head><meta charset="utf-8"/></head><body style="margin:0; background:transparent;">${html}</body></html>`); frame.contentDocument.close();
         
         setTimeout(() => { 
-            html2canvas(frame.contentDocument.body, { scale: 3, width: 350, windowWidth: 350 }).then(canvas => {
+            html2canvas(frame.contentDocument.body, { scale: 3, width: 380, windowWidth: 380, backgroundColor: null }).then(canvas => {
                 const dataUrl = canvas.toDataURL('image/png');
                 document.getElementById('preview-img').src = dataUrl;
                 document.getElementById('dl-link').onclick = () => {
@@ -345,7 +698,39 @@ type CommonItem = {
 
     window.closeModal = () => document.getElementById('preview-modal').style.display = 'none';
 
+    window.openInfoModal = () => document.getElementById('info-modal').style.display = 'flex';
+    window.closeInfoModal = () => document.getElementById('info-modal').style.display = 'none';
+
+    // Swipe Support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const threshold = 100;
+        if (touchEndX < touchStartX - threshold) {
+            // Swipe Left -> Receipt
+            if (mode === 'q') switchMode('r');
+        }
+        if (touchEndX > touchStartX + threshold) {
+            // Swipe Right -> Zap
+            if (mode === 'r') switchMode('q');
+        }
+    }
+
+    // Initial Load
+    loadData();
     renderList();
+    updateCore();
+    bindNumpadButtons();
     if (window.lucide) lucide.createIcons();
 </script>
 </body>

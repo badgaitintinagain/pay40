@@ -271,6 +271,10 @@ type CommonItem = {
                     <span class="summary-label">รัฐสนับสนุน (60%)</span>
                     <span class="summary-value" id="d-gov">0.00</span>
                 </div>
+                <div class="summary-row" id="d-user-base-row" style="display:none;">
+                    <span class="summary-label">เราจ่ายปกติ (40%)</span>
+                    <span class="summary-value" id="d-user-base">0.00</span>
+                </div>
                 <div class="summary-row extra" id="d-extra-row" style="display:none;">
                     <span class="summary-label" id="d-extra-note">จ่ายเพิ่ม (ส่วนเกินสิทธิ)</span>
                     <span class="summary-value" id="d-extra">0.00</span>
@@ -284,13 +288,12 @@ type CommonItem = {
         </div>
         <div class="numpad-shell">
             <div class="numpad" style="display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(4,1fr); gap:0;">
-                <button class="npbtn np-digit" data-digit="7" data-read="เจ็ด" type="button"><span class="np-main">7</span><span class="np-sub">เจ็ด</span></button><button class="npbtn np-digit" data-digit="8" data-read="แปด" type="button"><span class="np-main">8</span><span class="np-sub">แปด</span></button><button class="npbtn np-digit" data-digit="9" data-read="เก้า" type="button"><span class="np-main">9</span><span class="np-sub">เก้า</span></button>
-                <button class="npbtn np-digit" data-digit="4" data-read="สี่" type="button"><span class="np-main">4</span><span class="np-sub">สี่</span></button><button class="npbtn np-digit" data-digit="5" data-read="ห้า" type="button"><span class="np-main">5</span><span class="np-sub">ห้า</span></button><button class="npbtn np-digit" data-digit="6" data-read="หก" type="button"><span class="np-main">6</span><span class="np-sub">หก</span></button>
-                <button class="npbtn np-digit" data-digit="1" data-read="หนึ่ง" type="button"><span class="np-main">1</span><span class="np-sub">หนึ่ง</span></button><button class="npbtn np-digit" data-digit="2" data-read="สอง" type="button"><span class="np-main">2</span><span class="np-sub">สอง</span></button><button class="npbtn np-digit" data-digit="3" data-read="สาม" type="button"><span class="np-main">3</span><span class="np-sub">สาม</span></button>
-                <button class="npbtn action" type="button" onclick="clearQ()"><span class="np-main">ล้าง</span><span class="np-sub">กดค้างสั่น</span></button><button class="npbtn np-digit" data-digit="0" data-read="ศูนย์" type="button"><span class="np-main">0</span><span class="np-sub">ศูนย์</span></button><button class="npbtn action" type="button" onclick="delQ()"><span class="np-main"><i data-lucide="delete" style="color:var(--ink2)"></i></span><span class="np-sub">ลบ</span></button>
+                <button class="npbtn np-digit" data-digit="7" data-read="เจ็ด" type="button" onclick="tn('7')"><span class="np-main">7</span><span class="np-sub">เจ็ด</span></button><button class="npbtn np-digit" data-digit="8" data-read="แปด" type="button" onclick="tn('8')"><span class="np-main">8</span><span class="np-sub">แปด</span></button><button class="npbtn np-digit" data-digit="9" data-read="เก้า" type="button" onclick="tn('9')"><span class="np-main">9</span><span class="np-sub">เก้า</span></button>
+                <button class="npbtn np-digit" data-digit="4" data-read="สี่" type="button" onclick="tn('4')"><span class="np-main">4</span><span class="np-sub">สี่</span></button><button class="npbtn np-digit" data-digit="5" data-read="ห้า" type="button" onclick="tn('5')"><span class="np-main">5</span><span class="np-sub">ห้า</span></button><button class="npbtn np-digit" data-digit="6" data-read="หก" type="button" onclick="tn('6')"><span class="np-main">6</span><span class="np-sub">หก</span></button>
+                <button class="npbtn np-digit" data-digit="1" data-read="หนึ่ง" type="button" onclick="tn('1')"><span class="np-main">1</span><span class="np-sub">หนึ่ง</span></button><button class="npbtn np-digit" data-digit="2" data-read="สอง" type="button" onclick="tn('2')"><span class="np-main">2</span><span class="np-sub">สอง</span></button><button class="npbtn np-digit" data-digit="3" data-read="สาม" type="button" onclick="tn('3')"><span class="np-main">3</span><span class="np-sub">สาม</span></button>
+                <button class="npbtn action" type="button" onclick="clearQ()"><span class="np-main">ล้าง</span></button><button class="npbtn np-digit" data-digit="0" data-read="ศูนย์" type="button" onclick="tn('0')"><span class="np-main">0</span><span class="np-sub">ศูนย์</span></button><button class="npbtn action" type="button" onclick="delQ()"><span class="np-main"><i data-lucide="delete" style="color:var(--ink2)"></i></span><span class="np-sub">ลบ</span></button>
             </div>
             <div class="fit-check-line bottom"></div>
-            <div class="numpad-note">กดค้างที่ตัวเลขเพื่อสั่นเป็นจังหวะมอร์ส</div>
         </div>
     </div>
 
@@ -303,6 +306,7 @@ type CommonItem = {
             <div class="paper-scroll" id="r-list"></div>
             <div class="paper-sum">
                 <div class="srow"><span>ยอดรวมราคาสินค้า</span><span id="rs-total">0.00</span></div>
+                <div class="srow" id="rs-user-base-row" style="display:none;"><span>เราจ่ายปกติ (40%)</span><span id="rs-user-base">0.00</span></div>
                 <div class="srow" style="color:var(--gov)"><span>รัฐบาลสนับสนุน</span><span id="rs-gov">0.00</span></div>
                 <div class="srow" id="rs-extra-row" style="display:none; color:var(--pay)"><span>ส่วนเกินสิทธิ</span><span id="rs-extra">0.00</span></div>
                 <div class="net-bar"><span style="font-weight:800; font-size:1.05rem;">ยอดที่คุณต้องชำระจริง</span><span class="net-val" id="rs-net">0.00</span></div>
@@ -417,59 +421,6 @@ type CommonItem = {
     window.clearQ = () => { qStr = ''; updateCore(); };
     window.delQ = () => { qStr = qStr.slice(0, -1); updateCore(); };
 
-    const morseMap = {
-        '0': '-----',
-        '1': '.----',
-        '2': '..---',
-        '3': '...--',
-        '4': '....-',
-        '5': '.....',
-        '6': '-....',
-        '7': '--...',
-        '8': '---..',
-        '9': '----.'
-    };
-
-    function vibrateMorseDigit(digit) {
-        const sequence = morseMap[digit];
-        if (!sequence || !navigator.vibrate) return;
-        const pattern = [];
-        sequence.split('').forEach((symbol, index) => {
-            pattern.push(symbol === '.' ? 60 : 180);
-            if (index < sequence.length - 1) pattern.push(60);
-        });
-        navigator.vibrate(pattern);
-    }
-
-    function bindNumpadButtons() {
-        document.querySelectorAll('.np-digit').forEach((button) => {
-            const digit = button.dataset.digit;
-            let longPressTimer = null;
-            let longPressTriggered = false;
-
-            button.addEventListener('pointerdown', () => {
-                longPressTriggered = false;
-                longPressTimer = window.setTimeout(() => {
-                    longPressTriggered = true;
-                    vibrateMorseDigit(digit);
-                }, 450);
-            });
-
-            const clearPress = () => {
-                if (longPressTimer) window.clearTimeout(longPressTimer);
-                longPressTimer = null;
-            };
-
-            button.addEventListener('pointerup', clearPress);
-            button.addEventListener('pointerleave', clearPress);
-            button.addEventListener('pointercancel', clearPress);
-            button.addEventListener('click', () => {
-                if (longPressTriggered) return;
-                window.tn(digit);
-            });
-        });
-    }
-
     window.addFromInput = () => {
         const ne = document.getElementById('n-name'), pe = document.getElementById('n-price');
         const p = parseFloat(pe.value);
@@ -513,6 +464,7 @@ type CommonItem = {
         
         // potential support is 60% of total
         const supportPotential = total * 0.6;
+        const userBase = total * 0.4;
         
         // actual support is limited by: 1) 60% of total, 2) daily limit of 200, 3) remaining quota
         let gov = Math.min(supportPotential, 200, quota);
@@ -525,8 +477,22 @@ type CommonItem = {
 
         document.getElementById('d-total').innerText = total.toLocaleString();
         document.getElementById('d-gov').innerText = fmt(gov);
-        document.getElementById('d-extra-note').innerText = `ส่วนเกินสิทธิที่ต้องจ่ายเพิ่ม`;
-        document.getElementById('d-extra').innerText = fmt(extra);
+        
+        const userBaseRow = document.getElementById('d-user-base-row');
+        const extraRow = document.getElementById('d-extra-row');
+
+        if (extra > 0.005) {
+            userBaseRow.style.display = 'flex';
+            document.getElementById('d-user-base').innerText = fmt(userBase);
+            
+            extraRow.style.display = 'flex';
+            document.getElementById('d-extra-note').innerText = `จ่ายเพิ่ม (ส่วนเกินจาก ${Math.round(supportPotential)} - ${Math.round(gov)})`;
+            document.getElementById('d-extra').innerText = fmt(extra);
+        } else {
+            userBaseRow.style.display = 'none';
+            extraRow.style.display = 'none';
+        }
+        
         document.getElementById('d-pay').innerText = fmt(net);
         
         let warnMsg = '';
@@ -534,22 +500,21 @@ type CommonItem = {
         else if (supportPotential > quota) warnMsg = '⚠️ สิทธิคงเหลือไม่พอ';
         document.getElementById('d-warn').innerText = warnMsg;
 
-        const extraRow = document.getElementById('d-extra-row');
-        if (extra > 0.005) {
-            extraRow.style.display = 'flex';
-        } else {
-            extraRow.style.display = 'none';
-        }
-
         document.getElementById('rs-total').innerText = fmt(total);
         document.getElementById('rs-gov').innerText = '−' + fmt(gov);
         document.getElementById('rs-net').innerText = fmt(net);
-        const er = document.getElementById('rs-extra-row');
+        
+        const rsExtraRow = document.getElementById('rs-extra-row');
+        const rsUserBaseRow = document.getElementById('rs-user-base-row');
+
         if (extra > 0.005) { 
-            er.style.display = 'flex'; 
+            rsUserBaseRow.style.display = 'flex';
+            document.getElementById('rs-user-base').innerText = fmt(userBase);
+            rsExtraRow.style.display = 'flex'; 
             document.getElementById('rs-extra').innerText = '+' + fmt(extra); 
         } else {
-            er.style.display = 'none';
+            rsUserBaseRow.style.display = 'none';
+            rsExtraRow.style.display = 'none';
         }
     };
 
@@ -639,8 +604,13 @@ type CommonItem = {
                             <td style="padding: 8px 0 8px 10px; text-align: right; font-weight: 800; width: 25px;">฿</td>
                         </tr>
                         ${extra > 0.01 ? `
+                        <tr style="font-size: 15px; font-weight: 700; color: #7a6d65;">
+                            <td style="padding: 8px 0;">ส่วนเราจ่ายปกติ (40%)</td>
+                            <td style="padding: 8px 0; text-align: right; font-family: 'DM Sans', sans-serif; letter-spacing: 1.5px;">${fmt(total * 0.4)}</td>
+                            <td style="padding: 8px 0 8px 10px; text-align: right; font-weight: 800; width: 25px;">฿</td>
+                        </tr>
                         <tr style="font-size: 15px; font-weight: 700; color: #1a1512;">
-                            <td style="padding: 8px 0;">ส่วนเกินวงเงินสิทธิ/เพดาน</td>
+                            <td style="padding: 8px 0;">ส่วนเกินสิทธิ (${Math.round(total * 0.6)} - ${Math.round(gov)})</td>
                             <td style="padding: 8px 0; text-align: right; font-family: 'DM Sans', sans-serif; letter-spacing: 1.5px;">+${fmt(extra)}</td>
                             <td style="padding: 8px 0 8px 10px; text-align: right; font-weight: 800; width: 25px;">฿</td>
                         </tr>
@@ -701,36 +671,10 @@ type CommonItem = {
     window.openInfoModal = () => document.getElementById('info-modal').style.display = 'flex';
     window.closeInfoModal = () => document.getElementById('info-modal').style.display = 'none';
 
-    // Swipe Support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    document.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    document.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    }, { passive: true });
-
-    function handleSwipe() {
-        const threshold = 100;
-        if (touchEndX < touchStartX - threshold) {
-            // Swipe Left -> Receipt
-            if (mode === 'q') switchMode('r');
-        }
-        if (touchEndX > touchStartX + threshold) {
-            // Swipe Right -> Zap
-            if (mode === 'r') switchMode('q');
-        }
-    }
-
     // Initial Load
     loadData();
     renderList();
     updateCore();
-    bindNumpadButtons();
     if (window.lucide) lucide.createIcons();
 </script>
 </body>
